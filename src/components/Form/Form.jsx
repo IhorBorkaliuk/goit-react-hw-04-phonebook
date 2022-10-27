@@ -1,27 +1,34 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { ButtonForm } from './FormStyled';
 import { FormStyled, Text, Label, Input } from './FormStyled';
 
 
-export class Form extends Component {
-  state = { name: '', number: '' };
-  handleChange = evt => {
+export function Form({ onSubmit }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('')
+
+  const handleChange = evt => {
     const { name, value } = evt.target;
-    this.setState({ [name]: value });
+    if (name === 'name') {
+      setName(value)
+    }
+    if (name === 'number') {
+      setNumber(value);
+    }
   };
-  handleSubmit = evt => {
+  const handleSubmit = evt => {
     evt.preventDefault();
-    this.props.onSubmit(this.state );
-    this.reset();
+    onSubmit({ name, number });
+    reset();
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
+  const reset = () => {
+    setName('');
+    setNumber('')
   };
 
-  render() {
     return (
-      <FormStyled onSubmit={this.handleSubmit}>
+      <FormStyled onSubmit={handleSubmit}>
         <Label>
           <Text>Name</Text>
           <Input
@@ -30,8 +37,8 @@ export class Form extends Component {
             required
             type="text"
             name="name"
-            value={this.state.name}
-            onChange={this.handleChange}
+            value={name}
+            onChange={handleChange}
           />
         </Label>
 
@@ -43,13 +50,12 @@ export class Form extends Component {
             required
             type="tel"
             name="number"
-            value={this.state.number}
-            onChange={this.handleChange}
+            value={number}
+            onChange={handleChange}
           />
         </Label>
 
         <ButtonForm type="submit">Add contact</ButtonForm>
       </FormStyled>
     );
-  }
 }

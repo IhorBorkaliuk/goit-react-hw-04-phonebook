@@ -10,13 +10,17 @@ import { Title } from './ContactsList/ContactsListStyled';
 const LOCALE_STORAGE_KEY = 'AddedContacts'
 
 export function App() {
-  const [contacts, setContacts] = useState([]);
+    const [contacts, setContacts] = useState(
+      JSON.parse(localStorage.getItem(LOCALE_STORAGE_KEY)) ?? []
+    );
   const [filter, setFilter] = useState('');
 
   const addContact = contact => {
-    hasAlreadyAdded(contact)
-      ? Notiflix.Notify.info(`${contact.name} is already in contacts`)
-      : setContacts(prev => {
+    if (hasAlreadyAdded(contact)) {
+      Notiflix.Notify.info(`${contact.name} is already in contacts`)
+      return
+    }
+       setContacts(prev => {
         const newContact = {
           id: nanoid(),
           ...contact,
